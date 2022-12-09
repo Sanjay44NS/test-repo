@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.js"
+      integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"
+      integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c="
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      .container {
+        width: minmax(768px, 100vw);
+      }
+      .subContainer {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      .subContainer::before {
+        content: attr(data-containerid);
+        font-size: larger;
+        font-weight: bold;
+      }
+      .subContainer > h2,
+      .textContainer {
+        grid-column: 1/-1;
+      }
+      .box {
+        width: 300px;
+        height: 100px;
+
+        background-color: cadetblue;
+      }
+      .goldenRule {
+        background-color: gold;
+      }
+      .payroll {
+        background-color: palevioletred;
+      }
+      .chesapake {
+        background-color: cadetblue;
+      }
+
+      .unitedhealthcare {
+        background-color: coral;
+      }
+      .box::before {
+        content: attr(class);
+        position: relative;
+      }
+    </style>
+  </head>
+  <body>
+    <select class="" id="dropdown"></select>
+    <div class="container">
+      <div
+        class="claimsContainer subContainer"
+        data-containerid="goldenRule box"
+      >
+        <h2>Claims Container</h2>
+        <div class="textContainer">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus,
+          soluta et, veniam aliquam quisquam iste nulla nobis eos eligendi
+          debitis quam, praesentium quasi suscipit. Provident nulla maiores
+          impedit perferendis repellendus.
+        </div>
+        <div class="goldenRule box"></div>
+      </div>
+      <div
+        class="claimsContainer subContainer"
+        data-containerid="goldenRule box,payroll box"
+      >
+        <h2>Claims Container</h2>
+        <div class="textContainer">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus,
+          soluta et, veniam aliquam quisquam iste nulla nobis eos eligendi
+          debitis quam, praesentium quasi suscipit. Provident nulla maiores
+          impedit perferendis repellendus.
+        </div>
+        <div class="goldenRule box"></div>
+        <div class="payroll box"></div>
+      </div>
+      <div class="claimsContainer subContainer" data-containerid="payroll box">
+        <h2>Claims Container</h2>
+        <div class="textContainer">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus,
+          soluta et, veniam aliquam quisquam iste nulla nobis eos eligendi
+          debitis quam, praesentium quasi suscipit. Provident nulla maiores
+          impedit perferendis repellendus.
+        </div>
+        <div class="payroll box"></div>
+      </div>
+      <div class="authorizationContainer subContainer">
+        <h2>Authorization Container</h2>
+        <div class="textContainer">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus,
+          soluta et, veniam aliquam quisquam iste nulla nobis eos eligendi
+          debitis quam, praesentium quasi suscipit. Provident nulla maiores
+          impedit perferendis repellendus.
+        </div>
+        <div class="goldenRule box"></div>
+        <div class="payroll box"></div>
+        <div class="chesapake box"></div>
+        <div class="unitedhealthcare box"></div>
+      </div>
+      <div class="docsContainer subContainer">
+        <h2>Docs Container</h2>
+        <div class="textContainer">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus,
+          soluta et, veniam aliquam quisquam iste nulla nobis eos eligendi
+          debitis quam, praesentium quasi suscipit. Provident nulla maiores
+          impedit perferendis repellendus.
+        </div>
+        <div class="goldenRule box"></div>
+        <div class="payroll box"></div>
+        <div class="chesapake box"></div>
+        <div class="unitedhealthcare box"></div>
+      </div>
+    </div>
+  </body>
+  <script>
+    const dropdown = jQuery("#dropdown");
+    var boxesArray = [];
+    jQuery(".box").each(function () {
+      boxesArray.indexOf(jQuery(this).attr("class")) == -1
+        ? boxesArray.push(jQuery(this).attr("class"))
+        : true;
+    });
+    var result = [];
+    function getCombinations(valuesArray = []) {
+      var combi = [];
+      var temp = [];
+      var slent = Math.pow(2, valuesArray.length);
+
+      for (var i = 0; i < slent; i++) {
+        temp = [];
+        for (var j = 0; j < valuesArray.length; j++) {
+          if (i & Math.pow(2, j)) {
+            temp.push(valuesArray[j]);
+          }
+        }
+        if (temp.length > 0) {
+          combi.push(temp);
+        }
+      }
+
+      combi.sort((a, b) => a.length - b.length);
+      console.log(combi.join("\n"));
+      return combi;
+    }
+
+    result = getCombinations(boxesArray);
+
+    jQuery(result).each(function (i, e) {
+      const option = jQuery(`<option value="${e}">${e}</option>`);
+      dropdown.append(option);
+    });
+
+    dropdown.on("change", function () {
+      const currentView = jQuery(this).val();
+      jQuery("[data-containerid]").hide();
+      jQuery(`[data-containerid = "${currentView}"]`).show();
+    });
+    jQuery("[data-containerid]").hide();
+    jQuery(`[data-containerid = "${dropdown.val()}"]`).show();
+  </script>
+</html>
